@@ -10,7 +10,7 @@ on:
 
 jobs: 
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
 steps:
 - name: Checkout code 
@@ -26,4 +26,17 @@ steps:
 
 # Passo para carregar variáveis de ambiente baseado na branch
 - name: Load environment variables
-  run: 
+  run: |
+    if [ "${{ github.ref }}" == "refs/heads/dev" ]; then
+    cp .env.dev .env
+    elif [ "${{ github.ref }}" == "refs/heads/test" ]; then
+    cp .env.test .env
+    elif [ "${{ github.ref }}" == "refs/heads/main"]; then
+    cp .env.release .env
+    fi
+
+- name: Run tests
+  run: flutter test
+
+- name: Build APK
+  run: flutter build apk
