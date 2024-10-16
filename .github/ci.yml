@@ -1,0 +1,29 @@
+name: Flutter CI 
+
+on:
+  push: 
+    branches:
+      - dev
+      - test 
+      - main # Ou release
+
+
+jobs: 
+  build:
+    runs-on: ubuntu-latest
+
+steps:
+- name: Checkout code 
+  uses: actions/checkout@v2
+
+- name: Set up Flutter
+  uses: subosito/flutter-action@v2
+  width:
+    flutter-version: '2.5.0'
+
+- name: Install dependencies
+  run: flutter pub get 
+
+# Passo para carregar variáveis de ambiente baseado na branch
+- name: Load environment variables
+  run: 
