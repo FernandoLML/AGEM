@@ -28,11 +28,11 @@ steps:
 - name: Load environment variables
   run: |
     if [ "${{ github.ref }}" == "refs/heads/dev" ]; then
-    cp .env.dev .env
+     cp .env.dev .env
     elif [ "${{ github.ref }}" == "refs/heads/test" ]; then
-    cp .env.test .env
-    elif [ "${{ github.ref }}" == "refs/heads/main"]; then
-    cp .env.release .env
+     cp .env.test .env
+    elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
+     cp .env.release .env
     fi
 
 - name: Run tests
@@ -40,3 +40,24 @@ steps:
 
 - name: Build APK
   run: flutter build apk
+
+release:
+  needs: build
+  runs-on: windows-latest
+
+  steps: 
+  - name: Checkout code
+    uses: actions/checkout@v2
+
+  - name: Install Node.js
+    uses: actions/setup-node@v2
+    with: 
+      node-version: "14"
+
+  - name: Install dependencies
+    run: npm Install
+
+  - name: Run Semantic Release
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    run: npx semantic-release
