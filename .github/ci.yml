@@ -18,7 +18,7 @@ steps:
 
 - name: Set up Flutter
   uses: subosito/flutter-action@v2
-  width:
+  with:
     flutter-version: '2.5.0'
 
 - name: Install dependencies
