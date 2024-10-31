@@ -1,14 +1,23 @@
 import 'package:agem/core/colorFont.dart';
 import 'package:flutter/material.dart';
+import 'fornecedores.dart'; // Importe a tela Fornecedores
+import 'tabelas_screen.dart'; // Importe a tela Tabelas
 
-class AllTablesScreen extends StatelessWidget {
+class AllTablesScreen extends StatefulWidget {
   const AllTablesScreen({super.key});
+
+  @override
+  _AllTablesScreenState createState() => _AllTablesScreenState();
+}
+
+class _AllTablesScreenState extends State<AllTablesScreen> {
+  String _selectedTab = 'TODOS'; // Estado para rastrear a guia selecionada
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundBeige,
-      body: SingleChildScrollView( // Wrap the Column with SingleChildScrollView
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -46,44 +55,12 @@ class AllTablesScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      'TODOS',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.greenMain,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      'TABELAS',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppColors.brownIcon,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      'FORNECEDORES',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppColors.brownIcon,
-                      ),
-                    ),
-                  ),
-                ),
+                _buildTabItem(context, 'TODOS'),
+                _buildTabItem(context, 'TABELAS'),
+                _buildTabItem(context, 'FORNECEDORES'),
               ],
             ),
             const SizedBox(height: 24),
@@ -109,6 +86,46 @@ class AllTablesScreen extends StatelessWidget {
             itemDetails('Tabela Preços', 'Machado de Assis'),
             fullWidthDivider(),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTabItem(BuildContext context, String tabName) {
+    final bool isSelected = _selectedTab == tabName;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _selectedTab = tabName;
+          });
+          if (tabName == 'TABELAS') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const TabelasScreen(),
+              ),
+            );
+          } else if (tabName == 'FORNECEDORES') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const FornecedoresScreen(),
+              ),
+            );
+          }
+        },
+        child: Center(
+          child: Text(
+            tabName,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: isSelected ? AppColors.greenMain : AppColors.brownIcon,
+              decoration:
+                  isSelected ? TextDecoration.underline : TextDecoration.none,
+            ),
+          ),
         ),
       ),
     );
