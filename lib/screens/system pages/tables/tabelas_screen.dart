@@ -1,7 +1,9 @@
 import 'package:agem/core/colorFont.dart';
 import 'package:flutter/material.dart';
-import 'fornecedores.dart'; // Importa a tela Fornecedores
-import 'all_tables_screen.dart'; // Importa a tela Todos
+import 'fornecedores.dart'; // Importe a tela Fornecedores
+import 'all_tables_screen.dart'; // Importe a tela Todos
+
+enum SampleItem { itemOne, itemTwo }
 
 class TabelasScreen extends StatefulWidget {
   const TabelasScreen({super.key});
@@ -11,8 +13,8 @@ class TabelasScreen extends StatefulWidget {
 }
 
 class _TabelasScreenState extends State<TabelasScreen> {
-  String _selectedTab =
-      'TABELAS'; // Estado inicial para manter "TABELAS" selecionado
+  String _selectedTab = 'TABELAS';
+  SampleItem? selectedItem;
 
   @override
   Widget build(BuildContext context) {
@@ -23,34 +25,58 @@ class _TabelasScreenState extends State<TabelasScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 30),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.menu,
                     size: 36,
                     color: Colors.black,
                   ),
-                  SizedBox(width: 16),
-                  Text(
+                  const SizedBox(width: 16),
+                  const Text(
                     'Info',
                     style: TextStyle(
                       fontSize: 42,
                       color: Colors.black,
                     ),
                   ),
-                  Spacer(),
-                  Icon(
+                  const Spacer(),
+                  const Icon(
                     Icons.search,
                     size: 36,
                     color: Colors.black,
                   ),
-                  SizedBox(width: 16),
-                  Icon(
-                    Icons.more_vert,
-                    size: 36,
-                    color: Colors.black,
+                  const SizedBox(width: 16),
+                  PopupMenuButton<SampleItem>(
+                    onSelected: (SampleItem item) {
+                      setState(() {
+                        selectedItem = item;
+                      });
+                      // Implement actions for each selected item
+                      if (item == SampleItem.itemOne) {
+                        // Action for "Criar Tabela"
+                      } else if (item == SampleItem.itemTwo) {
+                        // Action for "Criar Fornecedor"
+                      }
+                    },
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<SampleItem>>[
+                      const PopupMenuItem<SampleItem>(
+                        value: SampleItem.itemOne,
+                        child: Text('Criar Tabela'),
+                      ),
+                      const PopupMenuItem<SampleItem>(
+                        value: SampleItem.itemTwo,
+                        child: Text('Criar Fornecedor'),
+                      ),
+                    ],
+                    icon: const Icon(
+                      Icons.more_vert,
+                      size: 36,
+                      color: Colors.black,
+                    ),
                   ),
                 ],
               ),

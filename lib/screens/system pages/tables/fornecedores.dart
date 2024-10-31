@@ -1,7 +1,9 @@
 import 'package:agem/core/colorFont.dart';
 import 'package:flutter/material.dart';
-import 'all_tables_screen.dart'; // Importação da tela AllTables
-import 'tabelas_screen.dart'; // Importe a tela Tabelas
+import 'all_tables_screen.dart';
+import 'tabelas_screen.dart';
+
+enum SampleItem { itemOne, itemTwo }
 
 class FornecedoresScreen extends StatefulWidget {
   const FornecedoresScreen({super.key});
@@ -11,8 +13,8 @@ class FornecedoresScreen extends StatefulWidget {
 }
 
 class _FornecedoresScreenState extends State<FornecedoresScreen> {
-  String _selectedTab =
-      'FORNECEDORES'; // Estado inicial para selecionar "FORNECEDORES"
+  String _selectedTab = 'FORNECEDORES';
+  SampleItem? selectedItem;
 
   @override
   Widget build(BuildContext context) {
@@ -23,34 +25,58 @@ class _FornecedoresScreenState extends State<FornecedoresScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 30),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.menu,
                     size: 36,
                     color: AppColors.brownIcon,
                   ),
-                  SizedBox(width: 16),
-                  Text(
+                  const SizedBox(width: 16),
+                  const Text(
                     'Info',
                     style: TextStyle(
                       fontSize: 42,
                       color: AppColors.brownIcon,
                     ),
                   ),
-                  Spacer(),
-                  Icon(
+                  const Spacer(),
+                  const Icon(
                     Icons.search,
                     size: 36,
                     color: AppColors.brownIcon,
                   ),
-                  SizedBox(width: 16),
-                  Icon(
-                    Icons.more_vert,
-                    size: 36,
-                    color: AppColors.brownIcon,
+                  const SizedBox(width: 16),
+                  PopupMenuButton<SampleItem>(
+                    onSelected: (SampleItem item) {
+                      setState(() {
+                        selectedItem = item;
+                      });
+                      // Implement actions for each selected item
+                      if (item == SampleItem.itemOne) {
+                        // Action for "Criar Tabela"
+                      } else if (item == SampleItem.itemTwo) {
+                        // Action for "Criar Fornecedor"
+                      }
+                    },
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<SampleItem>>[
+                      const PopupMenuItem<SampleItem>(
+                        value: SampleItem.itemOne,
+                        child: Text('Criar Tabela'),
+                      ),
+                      const PopupMenuItem<SampleItem>(
+                        value: SampleItem.itemTwo,
+                        child: Text('Criar Fornecedor'),
+                      ),
+                    ],
+                    icon: const Icon(
+                      Icons.more_vert,
+                      size: 36,
+                      color: AppColors.brownIcon,
+                    ),
                   ),
                 ],
               ),
