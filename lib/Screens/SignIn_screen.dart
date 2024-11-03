@@ -2,7 +2,6 @@ import 'package:agem/Colors_and_Fonts/colorsFont.dart';
 import 'package:agem/Our_tables/all_tables.dart';
 import 'package:flutter/material.dart';
 import 'package:agem/Widgets/TextFieldWidgets.dart';
-import 'package:agem/Our_tables/fornecedores.dart'; // Import the target screen
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
