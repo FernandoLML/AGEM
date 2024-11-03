@@ -1,7 +1,7 @@
-import 'package:agem/core/colorFont.dart';
+import 'package:agem/Colors_and_Fonts/colorsFont.dart';
 import 'package:flutter/material.dart';
-import 'fornecedores.dart'; // Importe a tela Fornecedores
-import 'all_tables_screen.dart'; // Importe a tela Todos
+import 'package:agem/Our_tables/fornecedores.dart'; // Importe a tela Fornecedores
+import 'package:agem/Our_tables/all_tables.dart'; // Importe a tela Todos
 
 enum SampleItem { itemOne, itemTwo }
 

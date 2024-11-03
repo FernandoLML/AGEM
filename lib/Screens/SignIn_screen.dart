@@ -1,12 +1,11 @@
-import 'package:agem/core/colorFont.dart'; // Import the color constants
-import 'package:agem/screens/system%20pages/tables/all_tables_screen.dart';
+import 'package:agem/Colors_and_Fonts/colorsFont.dart';
+import 'package:agem/Our_tables/all_tables.dart';
 import 'package:flutter/material.dart';
-import '../../core/widgets/textField.dart';
-import '../system pages/tables/fornecedores.dart'; // Import the target screen
-import '../login pages/signIn_screen.dart'; // Import the sign-in screen
+import 'package:agem/Widgets/TextFieldWidgets.dart';
+import 'package:agem/Our_tables/fornecedores.dart'; // Import the target screen
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class SignInScreen extends StatelessWidget {
+  const SignInScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,7 @@ class LoginScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 90,
                 fontWeight: FontWeight.bold,
-                color: AppColors.brownIcon,
+                color: Colors.black,
               ),
             ),
             const SizedBox(height: 32),
@@ -45,7 +44,7 @@ class LoginScreen extends StatelessWidget {
                 'Informe seus dados',
                 style: TextStyle(
                   fontSize: 16,
-                  color: AppColors.brownIcon,
+                  color: Colors.brown,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -70,20 +69,14 @@ class LoginScreen extends StatelessWidget {
                 'Esqueceu sua senha?',
                 style: TextStyle(
                   fontSize: 14,
-                  color: AppColors.brownIcon,
+                  color: Colors.brown,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
             const SizedBox(height: 24),
-            // Login Button with Navigation and custom color
+            // Login Button with Navigation
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.greenMain,
-                padding: const EdgeInsets.all(4), // Definindo padding de 4
-                minimumSize:
-                    const Size.fromHeight(48), // Definindo altura do botão
-              ),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -92,43 +85,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                 );
               },
-              child:
-                  const Text("Login", style: TextStyle(color: AppColors.white)),
-            ),
-            const Spacer(),
-            // "Don't have an account? Sign in" text with navigation, moved up by 50px
-            Padding(
-              padding: const EdgeInsets.only(bottom: 50.0), // Move up by 50px
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Don't have an account? ",
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.greenMain,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SignInScreen(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      "Sign in",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.greenMain,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              child: const Text("Login"),
             ),
           ],
         ),

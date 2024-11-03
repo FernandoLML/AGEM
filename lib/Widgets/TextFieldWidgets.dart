@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../colorFont.dart';
+import 'package:agem/Colors_and_Fonts/colorsFont.dart';
 
 class FilledTextFieldExample extends StatefulWidget {
   final String labelText; // New property for label text
@@ -41,7 +41,8 @@ class _FilledTextFieldExampleState extends State<FilledTextFieldExample> {
       child: TextField(
         focusNode: _focusNode,
         style: AppTextStyles.buttonBig,
-        obscureText: false, // Change to true if you want to obscure text (e.g., for password)
+        obscureText:
+            false, // Change to true if you want to obscure text (e.g., for password)
         decoration: InputDecoration(
           fillColor: AppColors.white,
           suffixIcon: const Icon(Icons.clear),

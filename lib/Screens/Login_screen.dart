@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/constants.dart'; // Importando o AppColors e AppTextStyles
+import 'package:agem/Colors_and_Fonts/colorsFont.dart'; // Importando o AppColors e AppTextStyles
 // Se precisar usar o tema inteiro
 
 class LoginScreen extends StatelessWidget {

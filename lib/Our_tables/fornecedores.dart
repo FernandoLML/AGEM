@@ -1,7 +1,7 @@
-import 'package:agem/core/colorFont.dart';
+import 'package:agem/Colors_and_Fonts/colorsFont.dart';
 import 'package:flutter/material.dart';
-import 'all_tables_screen.dart';
-import 'tabelas_screen.dart';
+import 'package:agem/Our_tables/all_tables.dart';
+import 'package:agem/Our_tables/tabelas_screen.dart';
 
 enum SampleItem { itemOne, itemTwo }
 
