@@ -1,8 +1,8 @@
 import 'package:agem/Colors_and_Fonts/colorsFont.dart';
 import 'package:flutter/material.dart';
 
-class TransacoesScreen extends StatelessWidget {
-  const TransacoesScreen({super.key});
+class UserScreen extends StatelessWidget {
+  const UserScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +20,11 @@ class TransacoesScreen extends StatelessWidget {
             fullWidthDivider(),
             itemDetails('Vlad Tepes Drácula', 'Administrador'),
             fullWidthDivider(),
-            itemDetails('Vlad Tepes Drácula', 'Administrador'),
+            itemDetails('Vlad Tepes Drácula', 'Visualizador'),
             fullWidthDivider(),
-            itemDetails('Vlad Tepes Drácula', 'Administrador'),
+            itemDetails('Vlad Tepes Drácula', 'Operador'),
             fullWidthDivider(),
-            itemDetails('Vlad Tepes Drácula', 'Administrador'),
+            itemDetails('Vlad Tepes Drácula', 'Operador'),
             fullWidthDivider(),
             itemDetails('Vlad Tepes Drácula', 'Administrador'),
             fullWidthDivider(),
@@ -84,7 +84,7 @@ class TransacoesScreen extends StatelessWidget {
           Row(
             children: [
               const Text(
-                'criada por ',
+                'permissão: ',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.black,

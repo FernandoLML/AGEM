@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:agem/Our_tables/all_tables.dart';
 import 'package:agem/main.dart';
+import 'package:agem/Dashboard/usuarios.dart';
+import 'package:agem/Dashboard/Transacoes.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -68,8 +70,8 @@ class _DashboardScreenState extends State<DashboardScreen>
           controller: _tabController,
           children: [
             _buildDashboardContent(),
-            _buildTransactionsContent(),
-            _buildUsersContent(),
+            TransacoesScreen(), // Abre a tela de Transações
+            UserScreen(), // Abre a tela de Usuários
           ],
         ),
       ),
@@ -149,24 +151,6 @@ class _DashboardScreenState extends State<DashboardScreen>
             _buildProductAnalysisChart(),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildTransactionsContent() {
-    return Center(
-      child: Text(
-        'Logs de Transação',
-        style: AppTextStyles.h2.copyWith(color: AppColors.greenDarker),
-      ),
-    );
-  }
-
-  Widget _buildUsersContent() {
-    return Center(
-      child: Text(
-        'Usuários Registrados',
-        style: AppTextStyles.h2.copyWith(color: AppColors.greenDarker),
       ),
     );
   }
