@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:agem/Dashboard/Dashboard.dart';
+import 'package:agem/screens/signup_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -36,6 +38,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'WEEZY App',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
@@ -55,8 +58,11 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Logo
-              Icon(Icons.access_time, size: 100, color: AppColors.brownIcon),
+              // Logo SVG
+              SvgPicture.asset(
+                'assets/img/logo.svg',
+                height: 128,
+              ),
               const SizedBox(height: 16),
 
               // Nome do app
@@ -111,6 +117,29 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 24),
 
               // Botão de login que redireciona para o Dashboard
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DashboardScreen()),
+                  );
+                },
+                child: Text(
+                  'Log in',
+                  style:
+                      AppTextStyles.buttonBig.copyWith(color: AppColors.white),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.greenMain,
+                  minimumSize: Size(double.infinity, 48),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Botão de login com Google que também redireciona para o Dashboard
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.push(
@@ -126,8 +155,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.greenMain,
-                  minimumSize:
-                      Size(double.infinity, 48), // Largura total do botão
+                  minimumSize: Size(double.infinity, 48),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -139,6 +167,10 @@ class LoginScreen extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   // Navegar para a página de criar conta
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignupScreen()),
+                  );
                 },
                 child: Text(
                   'Não tem uma conta? Criar conta',
