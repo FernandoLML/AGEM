@@ -13,10 +13,23 @@ class AllTablesScreen extends StatefulWidget {
   _AllTablesScreenState createState() => _AllTablesScreenState();
 }
 
-class _AllTablesScreenState extends State<AllTablesScreen> {
-  String _selectedTab = 'TODOS';
+class _AllTablesScreenState extends State<AllTablesScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   SampleItem? selectedItem;
   int _selectedIndex = 1; // Índice do item ativo na BottomNavigationBar
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,12 +56,6 @@ class _AllTablesScreenState extends State<AllTablesScreen> {
               setState(() {
                 selectedItem = item;
               });
-              // Implementar ações para cada item selecionado
-              if (item == SampleItem.itemOne) {
-                // Ação para "Criar Tabela"
-              } else if (item == SampleItem.itemTwo) {
-                // Ação para "Criar Fornecedor"
-              }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
               const PopupMenuItem<SampleItem>(
@@ -63,45 +70,26 @@ class _AllTablesScreenState extends State<AllTablesScreen> {
             icon: Icon(Icons.more_vert, color: AppColors.white),
           ),
         ],
+        bottom: TabBar(
+          controller: _tabController,
+          indicatorColor: AppColors.white,
+          labelColor: AppColors.white,
+          unselectedLabelColor: AppColors.brownLight,
+          tabs: const [
+            Tab(text: 'TODOS'),
+            Tab(text: 'TABELAS'),
+            Tab(text: 'FORNECEDORES'),
+          ],
+        ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: Container(
+        color: AppColors.backgroundBeige,
+        child: TabBarView(
+          controller: _tabController,
           children: [
-            const SizedBox(height: 24),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildTabItem(context, 'TODOS'),
-                  _buildTabItem(context, 'TABELAS'),
-                  _buildTabItem(context, 'FORNECEDORES'),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-            fullWidthDivider(),
-            section('Análises', Icons.tag),
-            fullWidthDivider(),
-            itemDetails('Qtde Madeiras', 'SISTEMA'),
-            fullWidthDivider(),
-            itemDetails('Tabela Preços', 'SISTEMA'),
-            fullWidthDivider(),
-            section('Tabelas Criadas', Icons.tag),
-            fullWidthDivider(),
-            itemDetails('Eucalipto', 'Machado de Assis'),
-            fullWidthDivider(),
-            itemDetails('Carvalho', 'Machado de Assis'),
-            fullWidthDivider(),
-            itemDetails('Pitu', 'Machado de Assis'),
-            fullWidthDivider(),
-            itemDetails('Cerejeira', 'Machado de Assis'),
-            fullWidthDivider(),
-            itemDetails('Bambu', 'Machado de Assis'),
-            fullWidthDivider(),
-            itemDetails('Tabela Preços', 'Machado de Assis'),
-            fullWidthDivider(),
+            _buildAllTablesContent(),
+            TabelasScreen(), // Tela de Tabelas
+            FornecedoresScreen(), // Tela de Fornecedores
           ],
         ),
       ),
@@ -144,42 +132,34 @@ class _AllTablesScreenState extends State<AllTablesScreen> {
     );
   }
 
-  Widget _buildTabItem(BuildContext context, String tabName) {
-    final bool isSelected = _selectedTab == tabName;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            _selectedTab = tabName;
-          });
-          if (tabName == 'TABELAS') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const TabelasScreen(),
-              ),
-            );
-          } else if (tabName == 'FORNECEDORES') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const FornecedoresScreen(),
-              ),
-            );
-          }
-        },
-        child: Center(
-          child: Text(
-            tabName,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-              color: isSelected ? AppColors.greenDarker : AppColors.brownLight,
-              decoration:
-                  isSelected ? TextDecoration.underline : TextDecoration.none,
-            ),
-          ),
-        ),
+  Widget _buildAllTablesContent() {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 24),
+          fullWidthDivider(),
+          section('Análises', Icons.tag),
+          fullWidthDivider(),
+          itemDetails('Qtde Madeiras', 'SISTEMA'),
+          fullWidthDivider(),
+          itemDetails('Tabela Preços', 'SISTEMA'),
+          fullWidthDivider(),
+          section('Tabelas Criadas', Icons.tag),
+          fullWidthDivider(),
+          itemDetails('Eucalipto', 'Machado de Assis'),
+          fullWidthDivider(),
+          itemDetails('Carvalho', 'Machado de Assis'),
+          fullWidthDivider(),
+          itemDetails('Pitu', 'Machado de Assis'),
+          fullWidthDivider(),
+          itemDetails('Cerejeira', 'Machado de Assis'),
+          fullWidthDivider(),
+          itemDetails('Bambu', 'Machado de Assis'),
+          fullWidthDivider(),
+          itemDetails('Tabela Preços', 'Machado de Assis'),
+          fullWidthDivider(),
+        ],
       ),
     );
   }
