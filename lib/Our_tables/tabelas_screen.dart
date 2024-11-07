@@ -1,7 +1,7 @@
 import 'package:agem/Colors_and_Fonts/colorsFont.dart';
 import 'package:flutter/material.dart';
-import 'package:agem/Our_tables/fornecedores.dart'; // Importe a tela Fornecedores
-import 'package:agem/Our_tables/all_tables.dart'; // Importe a tela Todos
+import 'package:agem/Our_tables/all_tables.dart';
+import 'package:agem/Our_tables/fornecedores.dart';
 
 enum SampleItem { itemOne, itemTwo }
 
@@ -9,86 +9,75 @@ class TabelasScreen extends StatefulWidget {
   const TabelasScreen({super.key});
 
   @override
-  _TabelasScreenState createState() => _TabelasScreenState();
+  _TabelasScreen createState() => _TabelasScreen();
 }
 
-class _TabelasScreenState extends State<TabelasScreen> {
+class _TabelasScreen extends State<TabelasScreen> {
   String _selectedTab = 'TABELAS';
   SampleItem? selectedItem;
+  int _selectedIndex = 1; // Índice do item ativo na BottomNavigationBar
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundBeige,
+      appBar: AppBar(
+        backgroundColor: AppColors.greenMain,
+        elevation: 0,
+        title: Text(
+          'Painéis',
+          style: AppTextStyles.body1.copyWith(color: AppColors.white),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.menu, color: AppColors.white),
+          onPressed: () {}, // Ação para o botão de menu
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search, color: AppColors.white),
+            onPressed: () {}, // Ação para o botão de pesquisa
+          ),
+          PopupMenuButton<SampleItem>(
+            onSelected: (SampleItem item) {
+              setState(() {
+                selectedItem = item;
+              });
+              // Implementar ações para cada item selecionado
+              if (item == SampleItem.itemOne) {
+                // Ação para "Criar Tabela"
+              } else if (item == SampleItem.itemTwo) {
+                // Ação para "Criar Fornecedor"
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
+              const PopupMenuItem<SampleItem>(
+                value: SampleItem.itemOne,
+                child: Text('Criar Tabela'),
+              ),
+              const PopupMenuItem<SampleItem>(
+                value: SampleItem.itemTwo,
+                child: Text('Criar Fornecedor'),
+              ),
+            ],
+            icon: Icon(Icons.more_vert, color: AppColors.white),
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 30),
+            const SizedBox(height: 24),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  const Icon(
-                    Icons.menu,
-                    size: 36,
-                    color: Colors.black,
-                  ),
-                  const SizedBox(width: 16),
-                  const Text(
-                    'Info',
-                    style: TextStyle(
-                      fontSize: 42,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const Spacer(),
-                  const Icon(
-                    Icons.search,
-                    size: 36,
-                    color: Colors.black,
-                  ),
-                  const SizedBox(width: 16),
-                  PopupMenuButton<SampleItem>(
-                    onSelected: (SampleItem item) {
-                      setState(() {
-                        selectedItem = item;
-                      });
-                      // Implement actions for each selected item
-                      if (item == SampleItem.itemOne) {
-                        // Action for "Criar Tabela"
-                      } else if (item == SampleItem.itemTwo) {
-                        // Action for "Criar Fornecedor"
-                      }
-                    },
-                    itemBuilder: (BuildContext context) =>
-                        <PopupMenuEntry<SampleItem>>[
-                      const PopupMenuItem<SampleItem>(
-                        value: SampleItem.itemOne,
-                        child: Text('Criar Tabela'),
-                      ),
-                      const PopupMenuItem<SampleItem>(
-                        value: SampleItem.itemTwo,
-                        child: Text('Criar Fornecedor'),
-                      ),
-                    ],
-                    icon: const Icon(
-                      Icons.more_vert,
-                      size: 36,
-                      color: Colors.black,
-                    ),
-                  ),
+                  _buildTabItem(context, 'TODOS'),
+                  _buildTabItem(context, 'TABELAS'),
+                  _buildTabItem(context, 'FORNECEDORES'),
                 ],
               ),
-            ),
-            const SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildTabItem(context, 'TODOS'),
-                _buildTabItem(context, 'TABELAS'),
-                _buildTabItem(context, 'FORNECEDORES'),
-              ],
             ),
             const SizedBox(height: 24),
             fullWidthDivider(),
@@ -109,6 +98,40 @@ class _TabelasScreenState extends State<TabelasScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: AppColors.white,
+        selectedItemColor: AppColors.greenMain,
+        unselectedItemColor: AppColors.brownLight,
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pop(
+                context); // Volta para a tela inicial se "Home" for selecionado
+          } else {
+            setState(() {
+              _selectedIndex = index;
+            });
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Produto',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'Usuários',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Perfil',
+          ),
+        ],
+      ),
     );
   }
 
@@ -120,18 +143,18 @@ class _TabelasScreenState extends State<TabelasScreen> {
           setState(() {
             _selectedTab = tabName;
           });
-          if (tabName == 'TODOS') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const AllTablesScreen(),
-              ),
-            );
-          } else if (tabName == 'FORNECEDORES') {
+          if (tabName == 'FORNECEDORES') {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => const FornecedoresScreen(),
+              ),
+            );
+          } else if (tabName == 'TODOS') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AllTablesScreen(),
               ),
             );
           }

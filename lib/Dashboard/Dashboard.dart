@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart'; // Certifique-se de que esse widget foi implementado
+import 'package:flutter/material.dart';
+import 'package:agem/Our_tables/all_tables.dart';
 
 class AppColors {
   static const backgroundBeige = Color(0xFFF4F3EE);
@@ -64,11 +65,12 @@ class DashboardScreen extends StatelessWidget {
               // Saudação
               Text(
                 'Bem vindo,',
-                style: AppTextStyles.body1.copyWith(color: AppColors.brownIcon),
+                style:
+                    AppTextStyles.subtitle.copyWith(color: AppColors.brownIcon),
               ),
               Text(
                 'Vlad!',
-                style: AppTextStyles.h2.copyWith(color: AppColors.greenMain),
+                style: AppTextStyles.h2.copyWith(color: AppColors.greenDarker),
               ),
               const SizedBox(height: 24),
 
@@ -108,6 +110,15 @@ class DashboardScreen extends StatelessWidget {
         backgroundColor: AppColors.white,
         selectedItemColor: AppColors.greenMain,
         unselectedItemColor: AppColors.brownLight,
+        onTap: (index) {
+          if (index == 1) {
+            // Índice do ícone de Produto
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AllTablesScreen()),
+            );
+          }
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
