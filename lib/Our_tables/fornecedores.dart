@@ -1,4 +1,5 @@
 import 'package:agem/Colors_and_Fonts/colorsFont.dart';
+import 'package:agem/Dashboard/Dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:agem/Our_tables/all_tables.dart';
 import 'package:agem/Our_tables/tabelas_screen.dart';
@@ -105,8 +106,10 @@ class _FornecedoresScreen extends State<FornecedoresScreen> {
         currentIndex: _selectedIndex,
         onTap: (index) {
           if (index == 0) {
-            Navigator.pop(
-                context); // Volta para a tela inicial se "Home" for selecionado
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => DashboardScreen()),
+            ); // Navega para a Dashboard
           } else {
             setState(() {
               _selectedIndex = index;

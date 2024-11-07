@@ -2,6 +2,7 @@ import 'package:agem/Colors_and_Fonts/colorsFont.dart';
 import 'package:flutter/material.dart';
 import 'package:agem/Our_tables/fornecedores.dart';
 import 'package:agem/Our_tables/tabelas_screen.dart';
+import 'package:agem/Dashboard/Dashboard.dart';
 
 enum SampleItem { itemOne, itemTwo }
 
@@ -111,8 +112,10 @@ class _AllTablesScreenState extends State<AllTablesScreen> {
         currentIndex: _selectedIndex,
         onTap: (index) {
           if (index == 0) {
-            Navigator.pop(
-                context); // Volta para a tela inicial se "Home" for selecionado
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => DashboardScreen()),
+            ); // Navega para a Dashboard
           } else {
             setState(() {
               _selectedIndex = index;
@@ -170,8 +173,8 @@ class _AllTablesScreenState extends State<AllTablesScreen> {
             tabName,
             style: TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: isSelected ? AppColors.greenMain : AppColors.brownIcon,
+              fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+              color: isSelected ? AppColors.greenDarker : AppColors.brownLight,
               decoration:
                   isSelected ? TextDecoration.underline : TextDecoration.none,
             ),
