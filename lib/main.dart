@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:agem/Dashboard/Dashboard.dart';
 import 'package:agem/screens/signup_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Supabase.initialize(
+    url: 'https://hvlhdutltkzwsbjswxiv.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2bGhkdXRsdGt6d3NianN3eGl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzEwMjQ4MTQsImV4cCI6MjA0NjYwMDgxNH0.BHvi6DIs6pNI3uDRLHRzaJ4vHwLYLmBfFp8bUhjsNjs',
+  );
   runApp(MyApp());
 }
 
