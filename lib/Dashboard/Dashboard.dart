@@ -3,6 +3,7 @@ import 'package:agem/Our_tables/all_tables.dart';
 import 'package:agem/Dashboard/usuarios.dart';
 import 'package:agem/Dashboard/Transacoes.dart';
 import 'package:agem/main.dart';
+import 'package:agem/Screens/perfil.dart';
 
 class DashboardScreen extends StatefulWidget {
   final int initialTabIndex;
@@ -17,6 +18,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late int _selectedIndex;
+  SampleItem? selectedItem;
 
   @override
   void initState() {
@@ -43,18 +45,41 @@ class _DashboardScreenState extends State<DashboardScreen>
           'Painéis',
           style: AppTextStyles.body1.copyWith(color: AppColors.white),
         ),
-        leading: IconButton(
-          icon: Icon(Icons.menu, color: AppColors.white),
-          onPressed: () {}, // Ação para o botão de menu
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        PerfilScreen()), // Navega para a tela de perfil
+              );
+            },
+            child: CircleAvatar(
+              backgroundColor: AppColors.white,
+              child: const Text('A'),
+            ),
+          ),
         ),
         actions: [
           IconButton(
             icon: Icon(Icons.search, color: AppColors.white),
             onPressed: () {}, // Ação para o botão de pesquisa
           ),
-          IconButton(
+          PopupMenuButton<SampleItem>(
+            onSelected: (SampleItem item) {
+              setState(() {
+                selectedItem = item;
+              });
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
+              const PopupMenuItem<SampleItem>(
+                value: SampleItem.itemOne,
+                child: Text('Baixar Informações'),
+              ),
+            ],
             icon: Icon(Icons.more_vert, color: AppColors.white),
-            onPressed: () {}, // Ação para o botão de mais opções
           ),
         ],
         bottom: TabBar(
@@ -101,6 +126,11 @@ class _DashboardScreenState extends State<DashboardScreen>
               context,
               MaterialPageRoute(
                   builder: (context) => DashboardScreen(initialTabIndex: 2)),
+            );
+          } else if (index == 3) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => PerfilScreen()),
             );
           }
         },

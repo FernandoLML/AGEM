@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:agem/Our_tables/fornecedores.dart';
 import 'package:agem/Our_tables/tabelas_screen.dart';
 import 'package:agem/Dashboard/Dashboard.dart';
+import 'package:agem/Screens/perfil.dart';
 
 enum SampleItem { itemOne, itemTwo }
 
@@ -42,9 +43,22 @@ class _AllTablesScreenState extends State<AllTablesScreen>
           'Painéis',
           style: AppTextStyles.body1.copyWith(color: AppColors.white),
         ),
-        leading: IconButton(
-          icon: Icon(Icons.menu, color: AppColors.white),
-          onPressed: () {}, // Ação para o botão de menu
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        PerfilScreen()), // Navega para a tela de perfil
+              );
+            },
+            child: CircleAvatar(
+              backgroundColor: AppColors.white,
+              child: const Text('A'),
+            ),
+          ),
         ),
         actions: [
           IconButton(
@@ -77,7 +91,7 @@ class _AllTablesScreenState extends State<AllTablesScreen>
           unselectedLabelColor: AppColors.brownLight,
           tabs: const [
             Tab(text: 'TODOS'),
-            Tab(text: 'TABELAS'),
+            Tab(text: 'PRODUTOS'),
             Tab(text: 'FORNECEDORES'),
           ],
         ),
@@ -105,7 +119,6 @@ class _AllTablesScreenState extends State<AllTablesScreen>
               MaterialPageRoute(builder: (context) => DashboardScreen()),
             );
           } else if (index == 1) {
-            // Continue com o índice de Produto ou outras ações
             setState(() {
               _selectedIndex = index;
             });
@@ -114,6 +127,11 @@ class _AllTablesScreenState extends State<AllTablesScreen>
               context,
               MaterialPageRoute(
                   builder: (context) => DashboardScreen(initialTabIndex: 2)),
+            );
+          } else if (index == 3) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => PerfilScreen()),
             );
           }
         },

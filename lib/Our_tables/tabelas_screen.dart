@@ -14,7 +14,7 @@ class TabelasScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 24),
             fullWidthDivider(),
-            section('Tabelas Criadas', Icons.tag),
+            section('Todos Produtos', Icons.tag),
             fullWidthDivider(),
             itemDetails('Eucalipto', 'Machado de Assis'),
             fullWidthDivider(),
