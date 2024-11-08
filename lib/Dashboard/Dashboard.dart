@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:agem/Our_tables/all_tables.dart';
-import 'package:agem/main.dart';
 import 'package:agem/Dashboard/usuarios.dart';
 import 'package:agem/Dashboard/Transacoes.dart';
+import 'package:agem/main.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+  final int initialTabIndex;
+
+  const DashboardScreen({Key? key, this.initialTabIndex = 0}) : super(key: key);
 
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
@@ -14,11 +16,14 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late int _selectedIndex;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _selectedIndex = widget.initialTabIndex;
+    _tabController =
+        TabController(length: 3, vsync: this, initialIndex: _selectedIndex);
   }
 
   @override
@@ -79,11 +84,23 @@ class _DashboardScreenState extends State<DashboardScreen>
         backgroundColor: AppColors.white,
         selectedItemColor: AppColors.greenMain,
         unselectedItemColor: AppColors.brownLight,
+        currentIndex: _selectedIndex,
         onTap: (index) {
-          if (index == 1) {
-            Navigator.push(
+          if (index == 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => DashboardScreen()),
+            );
+          } else if (index == 1) {
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => AllTablesScreen()),
+            );
+          } else if (index == 2) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DashboardScreen(initialTabIndex: 2)),
             );
           }
         },

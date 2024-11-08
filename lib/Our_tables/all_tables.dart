@@ -103,11 +103,18 @@ class _AllTablesScreenState extends State<AllTablesScreen>
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => DashboardScreen()),
-            ); // Navega para a Dashboard
-          } else {
+            );
+          } else if (index == 1) {
+            // Continue com o índice de Produto ou outras ações
             setState(() {
               _selectedIndex = index;
             });
+          } else if (index == 2) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DashboardScreen(initialTabIndex: 2)),
+            );
           }
         },
         items: const [
