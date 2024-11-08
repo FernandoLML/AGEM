@@ -3,6 +3,8 @@ import 'package:agem/Our_tables/all_tables.dart';
 import 'package:agem/Dashboard/usuarios.dart';
 import 'package:agem/Dashboard/Transacoes.dart';
 import 'package:agem/main.dart';
+import 'package:agem/Dashboard/Dashboard.dart';
+import 'package:agem/Screens/perfil.dart';
 
 class PerfilScreen extends StatefulWidget {
   final int initialTabIndex;
@@ -16,7 +18,7 @@ class PerfilScreen extends StatefulWidget {
 class _PerfilScreenState extends State<PerfilScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  int _selectedIndex = 1;
+  int _selectedIndex = 3; // Ajustado para o item "Perfil"
 
   @override
   void initState() {
@@ -75,23 +77,27 @@ class _PerfilScreenState extends State<PerfilScreen>
         unselectedItemColor: AppColors.brownLight,
         currentIndex: _selectedIndex,
         onTap: (index) {
+          setState(() {
+            _selectedIndex = index; // Atualiza o índice antes da navegação
+          });
+
           if (index == 0) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => PerfilScreen()),
+              MaterialPageRoute(builder: (context) => DashboardScreen()),
             );
           } else if (index == 1) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => AllTablesScreen()),
-            );
+            setState(() {
+              _selectedIndex = index;
+            });
           } else if (index == 2) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => PerfilScreen(initialTabIndex: 2)),
+                  builder: (context) => DashboardScreen(initialTabIndex: 2)),
             );
-          } else if (index == 3) {
+          } else if (index == 3 && _selectedIndex != 3) {
+            // Evita navegação duplicada
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => PerfilScreen()),

@@ -40,7 +40,7 @@ class _AllTablesScreenState extends State<AllTablesScreen>
         backgroundColor: AppColors.greenMain,
         elevation: 0,
         title: Text(
-          'Painéis',
+          'Produtos',
           style: AppTextStyles.body1.copyWith(color: AppColors.white),
         ),
         leading: Padding(
@@ -113,22 +113,28 @@ class _AllTablesScreenState extends State<AllTablesScreen>
         unselectedItemColor: AppColors.brownLight,
         currentIndex: _selectedIndex,
         onTap: (index) {
+          setState(() {
+            _selectedIndex = index; // Atualiza o índice antes da navegação
+          });
+
           if (index == 0) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => DashboardScreen()),
             );
           } else if (index == 1) {
-            setState(() {
-              _selectedIndex = index;
-            });
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => AllTablesScreen()),
+            );
           } else if (index == 2) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (context) => DashboardScreen(initialTabIndex: 2)),
             );
-          } else if (index == 3) {
+          } else if (index == 3 && _selectedIndex != 3) {
+            // Evita navegação duplicada
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => PerfilScreen()),
