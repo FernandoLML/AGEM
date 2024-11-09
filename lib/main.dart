@@ -8,7 +8,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
     url: 'https://hvlhdutltkzwsbjswxiv.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2bGhkdXRsdGt6d3NianN3eGl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzEwMjQ4MTQsImV4cCI6MjA0NjYwMDgxNH0.BHvi6DIs6pNI3uDRLHRzaJ4vHwLYLmBfFp8bUhjsNjs',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2bGhkdXRsdGt6d3NianN3eGl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzEwMjQ4MTQsImV4cCI6MjA0NjYwMDgxNH0.BHvi6DIs6pNI3uDRLHRzaJ4vHwLYLmBfFp8bUhjsNjs',
   );
   runApp(MyApp());
 }
@@ -143,7 +144,6 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
 
               // Botão de login com Google que também redireciona para o Dashboard
               ElevatedButton.icon(
