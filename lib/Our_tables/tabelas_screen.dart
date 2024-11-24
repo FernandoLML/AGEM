@@ -1,67 +1,71 @@
 import 'package:agem/Colors_and_Fonts/colorsFont.dart';
 import 'package:flutter/material.dart';
 
-class TabelasScreen extends StatelessWidget {
+class TabelasScreen extends StatefulWidget {
   const TabelasScreen({super.key});
 
   @override
+  _TabelasScreenState createState() => _TabelasScreenState();
+}
+
+class _TabelasScreenState extends State<TabelasScreen> {
+  List<Map<String, String>> _tables = [
+    {'title': 'Eucalipto', 'creator': 'Machado de Assis'},
+    {'title': 'Carvalho', 'creator': 'Machado de Assis'},
+    {'title': 'Pitu', 'creator': 'Machado de Assis'},
+    {'title': 'Cerejeira', 'creator': 'Machado de Assis'},
+    {'title': 'Bambu', 'creator': 'Machado de Assis'},
+    {'title': 'Tabela Preços', 'creator': 'Machado de Assis'},
+  ];
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.backgroundBeige,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 24),
-            fullWidthDivider(),
-            section('Todos Produtos', Icons.tag),
-            fullWidthDivider(),
-            itemDetails('Eucalipto', 'Machado de Assis'),
-            fullWidthDivider(),
-            itemDetails('Carvalho', 'Machado de Assis'),
-            fullWidthDivider(),
-            itemDetails('Pitu', 'Machado de Assis'),
-            fullWidthDivider(),
-            itemDetails('Cerejeira', 'Machado de Assis'),
-            fullWidthDivider(),
-            itemDetails('Bambu', 'Machado de Assis'),
-            fullWidthDivider(),
-            itemDetails('Tabela Preços', 'Machado de Assis'),
-            fullWidthDivider(),
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Tabelas'),
+        backgroundColor: AppColors.greenMain,
+      ),
+      body: Container(
+        color: AppColors.backgroundBeige,
+        child: ListView.separated(
+          itemCount: _tables.length,
+          itemBuilder: (context, index) {
+            final table = _tables[index];
+            return Dismissible(
+              key: Key(table['title']!),
+              background: Container(
+                color: Colors.red,
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(left: 20),
+                child: const Icon(Icons.delete, color: Colors.white),
+              ),
+              secondaryBackground: Container(
+                color: Colors.red,
+                alignment: Alignment.centerRight,
+                padding: const EdgeInsets.only(right: 20),
+                child: const Icon(Icons.delete, color: Colors.white),
+              ),
+              onDismissed: (direction) {
+                setState(() {
+                  _tables.removeAt(index);
+                });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('${table['title']} foi removido')),
+                );
+              },
+              child: itemDetails(table['title']!, table['creator']!),
+            );
+          },
+          separatorBuilder: (context, index) => Divider(
+            height: 1,
+            color: AppColors.brownLight,
+          ),
         ),
       ),
-    );
-  }
-
-  Widget fullWidthDivider() {
-    return Container(
-      width: double.infinity,
-      height: 1,
-      color: AppColors.brownLight,
-    );
-  }
-
-  Widget section(String title, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color: AppColors.brownIcon,
-            size: 32,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-        ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showAddTableDialog,
+        backgroundColor: AppColors.greenMain,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
@@ -102,6 +106,54 @@ class TabelasScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showAddTableDialog() {
+    String newTableTitle = '';
+    String newTableCreator = '';
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Adicionar Tabela'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                onChanged: (value) => newTableTitle = value,
+                decoration: const InputDecoration(labelText: 'Título'),
+              ),
+              TextField(
+                onChanged: (value) => newTableCreator = value,
+                decoration: const InputDecoration(labelText: 'Criador'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (newTableTitle.isNotEmpty && newTableCreator.isNotEmpty) {
+                  setState(() {
+                    _tables.add({'title': newTableTitle, 'creator': newTableCreator});
+                  });
+                  Navigator.pop(context);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Preencha todos os campos!')),
+                  );
+                }
+              },
+              child: const Text('Adicionar'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -2,7 +2,16 @@ import 'package:agem/Colors_and_Fonts/colorsFont.dart';
 import 'package:flutter/material.dart';
 
 class FornecedoresScreen extends StatelessWidget {
-  const FornecedoresScreen({super.key});
+   FornecedoresScreen({super.key});
+
+  final List<Map<String, String>> fornecedores = [
+    {'nome': 'Fornecedor 1', 'criador': 'Vlad'},
+    {'nome': 'Fornecedor 2', 'criador': 'Machado de Assis'},
+    {'nome': 'Fornecedor 3', 'criador': 'Machado de Assis'},
+    {'nome': 'Fornecedor 4', 'criador': 'Vlad'},
+    {'nome': 'Fornecedor 5', 'criador': 'Vlad'},
+    {'nome': 'Fornecedor 6', 'criador': 'Machado de Assis'},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -16,18 +25,15 @@ class FornecedoresScreen extends StatelessWidget {
             fullWidthDivider(),
             section('Fornecedores', Icons.tag),
             fullWidthDivider(),
-            itemDetails('Fornecedor 1', 'Vlad'),
-            fullWidthDivider(),
-            itemDetails('Fornecedor 2', 'Machado de Assis'),
-            fullWidthDivider(),
-            itemDetails('Fornecedor 3', 'Machado de Assis'),
-            fullWidthDivider(),
-            itemDetails('Fornecedor 4', 'Vlad'),
-            fullWidthDivider(),
-            itemDetails('Fornecedor 5', 'Vlad'),
-            fullWidthDivider(),
-            itemDetails('Fornecedor 6', 'Machado de Assis'),
-            fullWidthDivider(),
+            // Construindo os itens dinamicamente a partir da lista
+            ...fornecedores.map((fornecedor) {
+              return Column(
+                children: [
+                  itemDetails(fornecedor['nome']!, fornecedor['criador']!),
+                  fullWidthDivider(),
+                ],
+              );
+            }).toList(),
           ],
         ),
       ),

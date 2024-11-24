@@ -19,7 +19,19 @@ class _AllTablesScreenState extends State<AllTablesScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   SampleItem? selectedItem;
-  int _selectedIndex = 1; // Índice do item ativo na BottomNavigationBar
+  int _selectedIndex = 1;
+
+  // Lista de itens que será manipulada
+  List<Map<String, String>> _items = [
+    {"title": "Análises", "creator": "SISTEMA"},
+    {"title": "Qtde Madeiras", "creator": "SISTEMA"},
+    {"title": "Tabela Preços", "creator": "SISTEMA"},
+    {"title": "Eucalipto", "creator": "Machado de Assis"},
+    {"title": "Carvalho", "creator": "Machado de Assis"},
+    {"title": "Pitu", "creator": "Machado de Assis"},
+    {"title": "Cerejeira", "creator": "Machado de Assis"},
+    {"title": "Bambu", "creator": "Machado de Assis"},
+  ];
 
   @override
   void initState() {
@@ -31,6 +43,21 @@ class _AllTablesScreenState extends State<AllTablesScreen>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  // Função para fixar um item no topo da lista
+  void _fixItem(int index) {
+    setState(() {
+      final item = _items.removeAt(index);
+      _items.insert(0, item);
+    });
+  }
+
+  // Função para excluir um item da lista
+  void _deleteItem(int index) {
+    setState(() {
+      _items.removeAt(index);
+    });
   }
 
   @override
@@ -50,9 +77,7 @@ class _AllTablesScreenState extends State<AllTablesScreen>
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        PerfilScreen()), // Navega para a tela de perfil
+                MaterialPageRoute(builder: (context) => PerfilScreen()),
               );
             },
             child: CircleAvatar(
@@ -64,7 +89,7 @@ class _AllTablesScreenState extends State<AllTablesScreen>
         actions: [
           IconButton(
             icon: Icon(Icons.search, color: AppColors.white),
-            onPressed: () {}, // Ação para o botão de pesquisa
+            onPressed: () {},
           ),
           PopupMenuButton<SampleItem>(
             onSelected: (SampleItem item) {
@@ -107,8 +132,8 @@ class _AllTablesScreenState extends State<AllTablesScreen>
           controller: _tabController,
           children: [
             _buildAllTablesContent(),
-            TabelasScreen(), // Tela de Tabelas
-            FornecedoresScreen(), // Tela de Fornecedores
+            TabelasScreen(),
+            FornecedoresScreen(),
           ],
         ),
       ),
@@ -119,7 +144,7 @@ class _AllTablesScreenState extends State<AllTablesScreen>
         currentIndex: _selectedIndex,
         onTap: (index) {
           setState(() {
-            _selectedIndex = index; // Atualiza o índice antes da navegação
+            _selectedIndex = index;
           });
 
           if (index == 0) {
@@ -139,7 +164,6 @@ class _AllTablesScreenState extends State<AllTablesScreen>
                   builder: (context) => DashboardScreen(initialTabIndex: 2)),
             );
           } else if (index == 3 && _selectedIndex != 3) {
-            // Evita navegação duplicada
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => PerfilScreen()),
@@ -168,110 +192,47 @@ class _AllTablesScreenState extends State<AllTablesScreen>
     );
   }
 
+  // Alteração para exibir a lista com Dismissible
   Widget _buildAllTablesContent() {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 24),
-          fullWidthDivider(),
-          section('Análises', Icons.tag),
-          fullWidthDivider(),
-          itemDetails('Qtde Madeiras', 'SISTEMA'),
-          fullWidthDivider(),
-          itemDetails('Tabela Preços', 'SISTEMA'),
-          fullWidthDivider(),
-          section('Tabelas Criadas', Icons.tag),
-          fullWidthDivider(),
-          itemDetails('Eucalipto', 'Machado de Assis'),
-          fullWidthDivider(),
-          itemDetails('Carvalho', 'Machado de Assis'),
-          fullWidthDivider(),
-          itemDetails('Pitu', 'Machado de Assis'),
-          fullWidthDivider(),
-          itemDetails('Cerejeira', 'Machado de Assis'),
-          fullWidthDivider(),
-          itemDetails('Bambu', 'Machado de Assis'),
-          fullWidthDivider(),
-          itemDetails('Tabela Preços', 'Machado de Assis'),
-          fullWidthDivider(),
-        ],
-      ),
-    );
-  }
-
-  Widget fullWidthDivider() {
-    return Container(
-      width: double.infinity,
-      height: 1,
-      color: AppColors.brownLight,
-    );
-  }
-
-  Widget section(String title, IconData icon) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16.0),
-      color: AppColors.backgroundBeige,
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color: AppColors.brownIcon,
-            size: 32,
+    return ListView.builder(
+      itemCount: _items.length,
+      itemBuilder: (context, index) {
+        final item = _items[index];
+        return Dismissible(
+          key: Key(item['title']! + index.toString()),
+          background: Container(
+            color: Colors.green,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            alignment: Alignment.centerLeft,
+            child: const Icon(Icons.push_pin, color: Colors.white),
           ),
-          const SizedBox(width: 8),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
+          secondaryBackground: Container(
+            color: Colors.red,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            alignment: Alignment.centerRight,
+            child: const Icon(Icons.delete, color: Colors.white),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget itemDetails(String title, String creator) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16.0),
-      color: AppColors.backgroundBeige,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
+          onDismissed: (direction) {
+            if (direction == DismissDirection.endToStart) {
+              _deleteItem(index);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Item "${item['title']}" excluído')),
+              );
+            }
+          },
+          confirmDismiss: (direction) async {
+            if (direction == DismissDirection.startToEnd) {
+              _fixItem(index);
+              return false;
+            }
+            return true;
+          },
+          child: ListTile(
+            title: Text(item['title']!),
+            subtitle: Text('Criado por ${item['creator']}'),
           ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              const Text(
-                'criada por ',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black,
-                ),
-              ),
-              Text(
-                creator,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.greenMain,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
