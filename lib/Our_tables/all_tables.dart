@@ -92,27 +92,30 @@ class _AllTablesScreenState extends State<AllTablesScreen>
             onPressed: () {},
           ),
           PopupMenuButton<SampleItem>(
-            onSelected: (SampleItem item) {
-              setState(() {
-                selectedItem = item;
-              });
-
-              if (item == SampleItem.itemOne) {
-                Navigator.pushNamed(context, '/cadastro_produto');
-              }
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
-              const PopupMenuItem<SampleItem>(
-                value: SampleItem.itemOne,
-                child: Text('Criar Tabela'),
-              ),
-              const PopupMenuItem<SampleItem>(
-                value: SampleItem.itemTwo,
-                child: Text('Criar Fornecedor'),
-              ),
-            ],
-            icon: Icon(Icons.more_vert, color: AppColors.white),
+          onSelected: (SampleItem item) {
+          if (item == SampleItem.itemOne) {
+          // Navega para a tela de cadastro de produto
+          Navigator.pushNamed(context, '/cadastro_produto');
+         } else if (item == SampleItem.itemTwo) {
+          // Adicione aqui outra lógica de navegação ou funcionalidade
+         Navigator.push(
+           context,
+             MaterialPageRoute(builder: (context) => FornecedoresScreen()),
+            );
+          }
+         },
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
+          const PopupMenuItem<SampleItem>(
+          value: SampleItem.itemOne,
+          child: Text('Criar Tabela'),
           ),
+            const PopupMenuItem<SampleItem>(
+           value: SampleItem.itemTwo,
+            child: Text('Criar Fornecedor'),
+            ),
+            ],
+          icon: const Icon(Icons.more_vert, color: AppColors.white),
+        ),
         ],
         bottom: TabBar(
           controller: _tabController,

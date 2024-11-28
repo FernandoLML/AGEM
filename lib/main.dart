@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:agem/Dashboard/Dashboard.dart';
 import 'package:agem/screens/signup_screen.dart';
+import 'package:agem/Screens/cadastro_produto.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
@@ -49,7 +50,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: LoginScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => LoginScreen(),
+        '/dashboard': (context) => DashboardScreen(),
+        '/signup': (context) => SignupScreen(),
+        '/cadastro_produto': (context) => CadastroProdutoScreen(), // Nova rota
+      },
     );
   }
 }
@@ -126,10 +133,7 @@ class LoginScreen extends StatelessWidget {
               // Botão de login que redireciona para o Dashboard
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => DashboardScreen()),
-                  );
+                  Navigator.pushNamed(context, '/dashboard');
                 },
                 child: Text(
                   'Log in',
@@ -148,10 +152,7 @@ class LoginScreen extends StatelessWidget {
               // Botão de login com Google que também redireciona para o Dashboard
               ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => DashboardScreen()),
-                  );
+                  Navigator.pushNamed(context, '/dashboard');
                 },
                 icon: Icon(Icons.login, color: AppColors.white),
                 label: Text(
@@ -172,11 +173,7 @@ class LoginScreen extends StatelessWidget {
               // Criar conta
               GestureDetector(
                 onTap: () {
-                  // Navegar para a página de criar conta
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignupScreen()),
-                  );
+                  Navigator.pushNamed(context, '/signup');
                 },
                 child: Text(
                   'Não tem uma conta? Criar conta',
