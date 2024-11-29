@@ -9,7 +9,7 @@ import 'package:agem/Screens/cadastro_produto.dart';
 enum SampleItem { itemOne, itemTwo }
 
 class AllTablesScreen extends StatefulWidget {
-  const AllTablesScreen({super.key});
+  const AllTablesScreen({Key? key}) : super(key: key);
 
   @override
   _AllTablesScreenState createState() => _AllTablesScreenState();
@@ -18,11 +18,10 @@ class AllTablesScreen extends StatefulWidget {
 class _AllTablesScreenState extends State<AllTablesScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  SampleItem? selectedItem;
   int _selectedIndex = 1;
 
-  // Lista de itens que será manipulada
-  List<Map<String, String>> _items = [
+  // Lista manipulável
+  final List<Map<String, String>> _items = [
     {"title": "Análises", "creator": "SISTEMA"},
     {"title": "Qtde Madeiras", "creator": "SISTEMA"},
     {"title": "Tabela Preços", "creator": "SISTEMA"},
@@ -45,7 +44,7 @@ class _AllTablesScreenState extends State<AllTablesScreen>
     super.dispose();
   }
 
-  // Função para fixar um item no topo da lista
+  // Fixar item no topo da lista
   void _fixItem(int index) {
     setState(() {
       final item = _items.removeAt(index);
@@ -53,189 +52,198 @@ class _AllTablesScreenState extends State<AllTablesScreen>
     });
   }
 
-  // Função para excluir um item da lista
+  // Excluir item da lista
   void _deleteItem(int index) {
     setState(() {
       _items.removeAt(index);
     });
   }
 
+  // Reordenar itens ao arrastar
+  void _onReorder(int oldIndex, int newIndex) {
+    setState(() {
+      if (newIndex > oldIndex) newIndex -= 1;
+      final item = _items.removeAt(oldIndex);
+      _items.insert(newIndex, item);
+    });
+  }
+
+  // Navegar entre telas do BottomNavigationBar
+  void _navigateToScreen(int index) {
+    if (index == _selectedIndex) return;
+
+    Widget screen;
+    switch (index) {
+      case 0:
+        screen = DashboardScreen();
+        break;
+      case 1:
+        screen = AllTablesScreen();
+        break;
+      case 2:
+        screen = DashboardScreen(initialTabIndex: 2);
+        break;
+      case 3:
+        screen = PerfilScreen();
+        break;
+      default:
+        return;
+    }
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => screen),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundBeige,
-      appBar: AppBar(
-        backgroundColor: AppColors.greenMain,
-        elevation: 0,
-        title: Text(
-          'Produtos',
-          style: AppTextStyles.body1.copyWith(color: AppColors.white),
+      appBar: _buildAppBar(),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          _buildReorderableListView(), // Lista arrastável
+          const TabelasScreen(),
+          FornecedoresScreen(),
+        ],
+      ),
+      bottomNavigationBar: _buildBottomNavigationBar(),
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      backgroundColor: AppColors.greenMain,
+      elevation: 0,
+      title: Text(
+        'Produtos',
+        style: AppTextStyles.body1.copyWith(color: AppColors.white),
+      ),
+      leading: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const PerfilScreen()),
+            );
+          },
+          child: CircleAvatar(
+            backgroundColor: AppColors.white,
+            child: const Text('A'),
+          ),
         ),
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GestureDetector(
-            onTap: () {
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.search, color: AppColors.white),
+          onPressed: () {},
+        ),
+        PopupMenuButton<SampleItem>(
+          onSelected: (item) {
+            if (item == SampleItem.itemOne) {
+              Navigator.pushNamed(context, '/cadastro_produto');
+            } else if (item == SampleItem.itemTwo) {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PerfilScreen()),
+                MaterialPageRoute(builder: (context) => FornecedoresScreen()),
               );
-            },
-            child: CircleAvatar(
-              backgroundColor: AppColors.white,
-              child: const Text('A'),
-            ),
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search, color: AppColors.white),
-            onPressed: () {},
-          ),
-          PopupMenuButton<SampleItem>(
-          onSelected: (SampleItem item) {
-          if (item == SampleItem.itemOne) {
-          // Navega para a tela de cadastro de produto
-          Navigator.pushNamed(context, '/cadastro_produto');
-         } else if (item == SampleItem.itemTwo) {
-          // Adicione aqui outra lógica de navegação ou funcionalidade
-         Navigator.push(
-           context,
-             MaterialPageRoute(builder: (context) => FornecedoresScreen()),
-            );
-          }
-         },
-        itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
-          const PopupMenuItem<SampleItem>(
-          value: SampleItem.itemOne,
-          child: Text('Criar Tabela'),
-          ),
-            const PopupMenuItem<SampleItem>(
-           value: SampleItem.itemTwo,
-            child: Text('Criar Fornecedor'),
-            ),
-            ],
+            }
+          },
+          itemBuilder: (context) => const [
+            PopupMenuItem(value: SampleItem.itemOne, child: Text('Criar Tabela')),
+            PopupMenuItem(value: SampleItem.itemTwo, child: Text('Criar Fornecedor')),
+          ],
           icon: const Icon(Icons.more_vert, color: AppColors.white),
         ),
-        ],
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: AppColors.white,
-          labelColor: AppColors.white,
-          unselectedLabelColor: AppColors.brownLight,
-          tabs: const [
-            Tab(text: 'TODOS'),
-            Tab(text: 'PRODUTOS'),
-            Tab(text: 'FORNECEDORES'),
-          ],
-        ),
-      ),
-      body: Container(
-        color: AppColors.backgroundBeige,
-        child: TabBarView(
-          controller: _tabController,
-          children: [
-            _buildAllTablesContent(),
-            TabelasScreen(),
-            FornecedoresScreen(),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppColors.white,
-        selectedItemColor: AppColors.greenMain,
-        unselectedItemColor: AppColors.brownLight,
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-
-          if (index == 0) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => DashboardScreen()),
-            );
-          } else if (index == 1) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => AllTablesScreen()),
-            );
-          } else if (index == 2) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => DashboardScreen(initialTabIndex: 2)),
-            );
-          } else if (index == 3 && _selectedIndex != 3) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => PerfilScreen()),
-            );
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Produto',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Usuários',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Perfil',
-          ),
+      ],
+      bottom: TabBar(
+        controller: _tabController,
+        indicatorColor: AppColors.white,
+        labelColor: AppColors.white,
+        unselectedLabelColor: AppColors.brownLight,
+        tabs: const [
+          Tab(text: 'TODOS'),
+          Tab(text: 'PRODUTOS'),
+          Tab(text: 'FORNECEDORES'),
         ],
       ),
     );
   }
 
-  // Alteração para exibir a lista com Dismissible
-  Widget _buildAllTablesContent() {
-    return ListView.builder(
-      itemCount: _items.length,
-      itemBuilder: (context, index) {
-        final item = _items[index];
-        return Dismissible(
-          key: Key(item['title']! + index.toString()),
-          background: Container(
-            color: Colors.green,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            alignment: Alignment.centerLeft,
-            child: const Icon(Icons.push_pin, color: Colors.white),
+  Widget _buildBottomNavigationBar() {
+    return BottomNavigationBar(
+      backgroundColor: AppColors.white,
+      selectedItemColor: AppColors.greenMain,
+      unselectedItemColor: AppColors.brownLight,
+      currentIndex: _selectedIndex,
+      onTap: _navigateToScreen,
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+        BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Produto'),
+        BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Usuários'),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
+      ],
+    );
+  }
+
+  Widget _buildReorderableListView() {
+  return ReorderableListView.builder(
+    onReorder: _onReorder,
+    itemCount: _items.length,
+    itemBuilder: (context, index) {
+      final item = _items[index];
+      return Column(
+        key: Key(item['title']!),
+        children: [
+          Dismissible(
+            key: Key(item['title']! + index.toString()),
+            background: Container(
+              color: Colors.green,
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: const Icon(Icons.push_pin, color: Colors.white),
+            ),
+            secondaryBackground: Container(
+              color: Colors.red,
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: const Icon(Icons.delete, color: Colors.white),
+            ),
+            confirmDismiss: (direction) async {
+              if (direction == DismissDirection.startToEnd) {
+                _fixItem(index);
+                return false; // Não remove o item após fixar
+              }
+              return true; // Permite remoção
+            },
+            onDismissed: (direction) {
+              if (direction == DismissDirection.endToStart) {
+                _deleteItem(index);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Item "${item['title']}" excluído')),
+                );
+              }
+            },
+            child: ListTile(
+              title: Text(item['title']!),
+              subtitle: Text('Criado por ${item['creator']}'),
+              trailing: const Icon(Icons.drag_handle),
+            ),
           ),
-          secondaryBackground: Container(
-            color: Colors.red,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            alignment: Alignment.centerRight,
-            child: const Icon(Icons.delete, color: Colors.white),
-          ),
-          onDismissed: (direction) {
-            if (direction == DismissDirection.endToStart) {
-              _deleteItem(index);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Item "${item['title']}" excluído')),
-              );
-            }
-          },
-          confirmDismiss: (direction) async {
-            if (direction == DismissDirection.startToEnd) {
-              _fixItem(index);
-              return false;
-            }
-            return true;
-          },
-          child: ListTile(
-            title: Text(item['title']!),
-            subtitle: Text('Criado por ${item['creator']}'),
-          ),
+          // Adiciona o separador abaixo de cada item
+             Divider(
+              height: 1,
+              thickness: 1,
+              color: AppColors.brownLight,
+              indent: 16,
+              endIndent: 16,
+            ),
+         ],
         );
-      },
+     },
     );
-  }
+  } 
 }

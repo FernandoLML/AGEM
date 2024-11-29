@@ -1,3 +1,4 @@
+import 'package:agem/Our_tables/fornecedores.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:agem/Dashboard/Dashboard.dart';
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
         '/dashboard': (context) => DashboardScreen(),
         '/signup': (context) => SignupScreen(),
         '/cadastro_produto': (context) => CadastroProdutoScreen(), // Nova rota
+        '/fornecedores': (context) => FornecedoresScreen(),
       },
     );
   }
