@@ -18,7 +18,8 @@ class AppTextStyles {
   static const h3 = TextStyle(fontSize: 40, fontWeight: FontWeight.w600);
   static const subtitle = TextStyle(fontSize: 32, fontWeight: FontWeight.w600);
   static const buttonBig = TextStyle(fontSize: 16, fontWeight: FontWeight.w600);
-  static const buttonSmall = TextStyle(fontSize: 12, fontWeight: FontWeight.w600);
+  static const buttonSmall =
+      TextStyle(fontSize: 12, fontWeight: FontWeight.w600);
   static const body1 = TextStyle(fontSize: 16, fontWeight: FontWeight.w500);
   static const body2 = TextStyle(fontSize: 14, fontWeight: FontWeight.w500);
   static const medium1 = TextStyle(fontSize: 16, fontWeight: FontWeight.w600);
