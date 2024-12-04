@@ -1,8 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:agem/Colors_and_Fonts/colorsFont.dart'; // Importando o AppColors e AppTextStyles
+import 'package:agem/Colors_and_Fonts/colorsFont.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+ // Importando o AppColors e AppTextStyles
 // Se precisar usar o tema inteiro
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  Future<void> _login() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Preencha todos os campos.')),
+      );
+      return;
+    }
+
+    try {
+      final response = await Supabase.instance.client.auth
+          .signInWithPassword(email: email, password: password);
+
+      if (response.user != null) {
+        // Login bem-sucedido
+        Navigator.pushReplacementNamed(context, '/dashboard'); // Rota após login
+      }
+    } on AuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro: ${e.message}')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro inesperado: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,8 +65,9 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Campos de texto
+              // Campo de email
               TextField(
+                controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'Insira seu email',
                   labelStyle: AppTextStyles.body1
@@ -36,11 +78,15 @@ class LoginScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide.none,
                   ),
-                  prefixIcon: Icon(Icons.email, color: AppColors.brownMedium),
+                  prefixIcon:
+                      Icon(Icons.email, color: AppColors.brownMedium),
                 ),
               ),
               const SizedBox(height: 16),
+
+              // Campo de senha
               TextField(
+                controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Insira sua senha',
@@ -52,7 +98,8 @@ class LoginScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide.none,
                   ),
-                  prefixIcon: Icon(Icons.lock, color: AppColors.brownMedium),
+                  prefixIcon:
+                      Icon(Icons.lock, color: AppColors.brownMedium),
                 ),
               ),
               const SizedBox(height: 8),
@@ -68,14 +115,13 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              // Botão de login com Google
-              ElevatedButton.icon(
-                onPressed: () {},
-                icon: Icon(Icons.login, color: AppColors.white),
-                label: Text(
-                  'Sign in with Google',
-                  style:
-                      AppTextStyles.buttonBig.copyWith(color: AppColors.white),
+              // Botão de login
+              ElevatedButton(
+                onPressed: _login,
+                child: Text(
+                  'Entrar',
+                  style: AppTextStyles.buttonBig
+                      .copyWith(color: AppColors.white),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.greenMain,
@@ -91,7 +137,7 @@ class LoginScreen extends StatelessWidget {
               // Criar conta
               GestureDetector(
                 onTap: () {
-                  // Navegar para a página de criar conta
+                  Navigator.pushNamed(context, '/signup'); // Rota de criar conta
                 },
                 child: Text(
                   'Não tem uma conta? Criar conta',

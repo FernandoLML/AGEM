@@ -1,8 +1,62 @@
-import 'package:agem/Dashboard/Dashboard.dart';
-import 'package:agem/main.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:agem/Colors_and_Fonts/colorsFont.dart';
+import 'package:agem/Dashboard/Dashboard.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
+  @override
+  _SignupScreenState createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  Future<void> _signup() async {
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (name.isEmpty || email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Por favor, preencha todos os campos.')),
+      );
+      return;
+    }
+
+    try {
+      // Cria o usuário no Supabase Auth
+      final response = await Supabase.instance.client.auth
+          .signUp(email: email, password: password);
+
+      if (response.user != null) {
+        // Após criar o usuário, salva o nome na tabela "usuario"
+        await Supabase.instance.client.from('usuario').insert({
+          'id_usuario_uuid': response.user!.id, // ID único do Supabase Auth
+          'email': email,
+          'nome': name,
+          'data_criacao': DateTime.now().toIso8601String(),
+          'verificado': false,
+        });
+
+        // Redireciona para o Dashboard
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => DashboardScreen()),
+        );
+      }
+    } on AuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro: ${e.message}')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro inesperado: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,6 +67,7 @@ class SignupScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 40),
+
             // Botão de voltar
             GestureDetector(
               onTap: () => Navigator.pop(context),
@@ -54,6 +109,7 @@ class SignupScreen extends StatelessWidget {
 
             // Campo de texto "Nome"
             TextField(
+              controller: _nameController,
               decoration: InputDecoration(
                 labelText: 'Nome',
                 labelStyle:
@@ -71,6 +127,7 @@ class SignupScreen extends StatelessWidget {
 
             // Campo de texto "Email"
             TextField(
+              controller: _emailController,
               decoration: InputDecoration(
                 labelText: 'Insira seu email',
                 labelStyle:
@@ -88,6 +145,7 @@ class SignupScreen extends StatelessWidget {
 
             // Campo de texto "Senha"
             TextField(
+              controller: _passwordController,
               obscureText: true,
               decoration: InputDecoration(
                 labelText: 'Insira sua senha',
@@ -104,39 +162,11 @@ class SignupScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // Botão de login que redireciona para o Dashboard
+            // Botão de cadastro
             ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => DashboardScreen()),
-                );
-              },
+              onPressed: _signup,
               child: Text(
                 'Criar conta',
-                style: AppTextStyles.buttonBig.copyWith(color: AppColors.white),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.greenMain,
-                minimumSize: Size(double.infinity, 48),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Botão de login com Google que também redireciona para o Dashboard
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => DashboardScreen()),
-                );
-              },
-              icon: Icon(Icons.login, color: AppColors.white),
-              label: Text(
-                'Entrar com Google',
                 style: AppTextStyles.buttonBig.copyWith(color: AppColors.white),
               ),
               style: ElevatedButton.styleFrom(
