@@ -33,7 +33,7 @@ class _SignupScreenState extends State<SignupScreen> {
       if (response.user != null) {
         // Após criar o usuário, salva o nome na tabela "usuario"
         await Supabase.instance.client.from('usuario').insert({
-          'id_usuario_uuid': response.user!.id, // ID único do Supabase Auth
+          'id_usuario_uuid': response.user!.id, 
           'email': email,
           'nome': name,
           'data_criacao': DateTime.now().toIso8601String(),
