@@ -19,28 +19,6 @@ class _CadastroProdutoScreenState extends State<CadastroProdutoScreen> {
   // Chave global para validação do formulário
   final _formKey = GlobalKey<FormState>();
 
-  // Lógica para salvar os dados
-  void _cadastrarProduto() {
-    if (_formKey.currentState!.validate()) {
-      // TODO: Adicione a lógica de cadastro aqui
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Produto cadastrado com sucesso!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-
-      // Limpar campos após o cadastro
-      _especieController.clear();
-      _comprimentoController.clear();
-      _larguraController.clear();
-      _quantidadeController.clear();
-      _fornecedorController.clear();
-      _custoController.clear();
-      _dataController.clear();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,16 +59,6 @@ class _CadastroProdutoScreenState extends State<CadastroProdutoScreen> {
                 controller: _comprimentoController,
                 label: 'Comprimento (metros)',
                 hint: 'Ex.: 2.5',
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Informe o comprimento';
-                  }
-                  if (double.tryParse(value) == null) {
-                    return 'O comprimento deve ser numérico';
-                  }
-                  return null;
-                },
               ),
               const SizedBox(height: 16),
 
@@ -99,16 +67,6 @@ class _CadastroProdutoScreenState extends State<CadastroProdutoScreen> {
                 controller: _larguraController,
                 label: 'Largura (milímetros)',
                 hint: 'Ex.: 500',
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Informe a largura';
-                  }
-                  if (double.tryParse(value) == null) {
-                    return 'A largura deve ser numérica';
-                  }
-                  return null;
-                },
               ),
               const SizedBox(height: 16),
 
@@ -117,12 +75,6 @@ class _CadastroProdutoScreenState extends State<CadastroProdutoScreen> {
                 controller: _quantidadeController,
                 label: 'Quantidade de Material',
                 hint: 'Ex.: 10 peças',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Informe a quantidade';
-                  }
-                  return null;
-                },
               ),
               const SizedBox(height: 16),
 
@@ -139,16 +91,6 @@ class _CadastroProdutoScreenState extends State<CadastroProdutoScreen> {
                 controller: _custoController,
                 label: 'Custo (em R\$)',
                 hint: 'Ex.: 150.00',
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Informe o custo';
-                  }
-                  if (double.tryParse(value) == null) {
-                    return 'O custo deve ser numérico';
-                  }
-                  return null;
-                },
               ),
               const SizedBox(height: 16),
 
@@ -157,13 +99,28 @@ class _CadastroProdutoScreenState extends State<CadastroProdutoScreen> {
                 controller: _dataController,
                 label: 'Data',
                 hint: 'Ex.: 27/11/2024',
-                keyboardType: TextInputType.datetime,
               ),
               const SizedBox(height: 24),
 
               // Botão: Cadastrar Produto
               ElevatedButton(
-                onPressed: _cadastrarProduto,
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    final especie = _especieController.text;
+
+                    // Retornar apenas o valor da Espécie da Madeira
+                    Navigator.pop(context, especie);
+
+                    // Limpar os campos
+                    _especieController.clear();
+                    _comprimentoController.clear();
+                    _larguraController.clear();
+                    _quantidadeController.clear();
+                    _fornecedorController.clear();
+                    _custoController.clear();
+                    _dataController.clear();
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.greenMain,
                   shape: RoundedRectangleBorder(

@@ -1,5 +1,6 @@
 import 'package:agem/Colors_and_Fonts/colorsFont.dart';
 import 'package:flutter/material.dart';
+import 'package:agem/Screens/cadastro_produto.dart'; // Import da tela CadastroProdutoScreen
 
 class TabelasScreen extends StatefulWidget {
   const TabelasScreen({super.key});
@@ -10,21 +11,15 @@ class TabelasScreen extends StatefulWidget {
 
 class _TabelasScreenState extends State<TabelasScreen> {
   List<Map<String, String>> _tables = [
-    {'title': 'Eucalipto', 'creator': 'Machado de Assis'},
-    {'title': 'Carvalho', 'creator': 'Machado de Assis'},
-    {'title': 'Pitu', 'creator': 'Machado de Assis'},
-    {'title': 'Cerejeira', 'creator': 'Machado de Assis'},
-    {'title': 'Bambu', 'creator': 'Machado de Assis'},
-    {'title': 'Tabela Preços', 'creator': 'Machado de Assis'},
+    {'title': 'Eucalipto', 'creator': 'Administrator'},
+    {'title': 'Carvalho', 'creator': 'Administrator'},
+    {'title': 'Cerejeira', 'creator': 'Administrator'},
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tabelas'),
-        backgroundColor: AppColors.greenMain,
-      ),
+      
       body: Container(
         color: AppColors.backgroundBeige,
         child: ListView.separated(
@@ -63,7 +58,23 @@ class _TabelasScreenState extends State<TabelasScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _showAddTableDialog,
+        onPressed: () async {
+          // Navegar para CadastroProdutoScreen e aguardar o resultado
+          final especie = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CadastroProdutoScreen()),
+          );
+
+          // Verificar se uma espécie foi retornada
+          if (especie != null && especie is String) {
+            setState(() {
+              _tables.add({'title': especie, 'creator': 'Administrator'});
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Tabela "$especie" adicionada')),
+            );
+          }
+        },
         backgroundColor: AppColors.greenMain,
         child: const Icon(Icons.add, color: Colors.white),
       ),
@@ -88,7 +99,7 @@ class _TabelasScreenState extends State<TabelasScreen> {
           Row(
             children: [
               const Text(
-                'criada por ',
+                'Criada por ',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.black,
@@ -106,54 +117,6 @@ class _TabelasScreenState extends State<TabelasScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  void _showAddTableDialog() {
-    String newTableTitle = '';
-    String newTableCreator = '';
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Adicionar Tabela'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                onChanged: (value) => newTableTitle = value,
-                decoration: const InputDecoration(labelText: 'Título'),
-              ),
-              TextField(
-                onChanged: (value) => newTableCreator = value,
-                decoration: const InputDecoration(labelText: 'Criador'),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: () {
-                if (newTableTitle.isNotEmpty && newTableCreator.isNotEmpty) {
-                  setState(() {
-                    _tables.add({'title': newTableTitle, 'creator': newTableCreator});
-                  });
-                  Navigator.pop(context);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Preencha todos os campos!')),
-                  );
-                }
-              },
-              child: const Text('Adicionar'),
-            ),
-          ],
-        );
-      },
     );
   }
 }
