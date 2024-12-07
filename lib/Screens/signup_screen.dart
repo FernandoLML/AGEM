@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:agem/Colors_and_Fonts/colorsFont.dart';
-import 'package:agem/Dashboard/Dashboard.dart';
 
 class SignupScreen extends StatefulWidget {
   @override
@@ -12,6 +11,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   Future<void> _signup() async {
     final name = _nameController.text.trim();
@@ -25,6 +25,10 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
+    setState(() {
+      _isLoading = true; // Ativa o indicador de carregamento
+    });
+
     try {
       // Cria o usuário no Supabase Auth
       final response = await Supabase.instance.client.auth
@@ -33,18 +37,19 @@ class _SignupScreenState extends State<SignupScreen> {
       if (response.user != null) {
         // Após criar o usuário, salva o nome na tabela "usuario"
         await Supabase.instance.client.from('usuario').insert({
-          'id_usuario_uuid': response.user!.id, 
+          'id_usuario_uuid': response.user!.id,
           'email': email,
           'nome': name,
           'data_criacao': DateTime.now().toIso8601String(),
           'verificado': false,
         });
 
-        // Redireciona para o Dashboard
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => DashboardScreen()),
+        // Redireciona para a tela de login
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Conta criada com sucesso! Faça login.')),
         );
+
+        Navigator.pushNamed(context, '/'); // Retorna à tela anterior (login)
       }
     } on AuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -54,6 +59,10 @@ class _SignupScreenState extends State<SignupScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro inesperado: $e')),
       );
+    } finally {
+      setState(() {
+        _isLoading = false; // Desativa o indicador de carregamento
+      });
     }
   }
 
@@ -164,11 +173,17 @@ class _SignupScreenState extends State<SignupScreen> {
 
             // Botão de cadastro
             ElevatedButton(
-              onPressed: _signup,
-              child: Text(
-                'Criar conta',
-                style: AppTextStyles.buttonBig.copyWith(color: AppColors.white),
-              ),
+              onPressed: _isLoading ? null : _signup,
+              child: _isLoading
+                  ? CircularProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(AppColors.white),
+                    )
+                  : Text(
+                      'Criar conta',
+                      style: AppTextStyles.buttonBig
+                          .copyWith(color: AppColors.white),
+                    ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.greenMain,
                 minimumSize: Size(double.infinity, 48),

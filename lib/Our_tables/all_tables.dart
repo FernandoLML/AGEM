@@ -4,7 +4,7 @@ import 'package:agem/Our_tables/fornecedores.dart';
 import 'package:agem/Our_tables/tabelas_screen.dart';
 import 'package:agem/Dashboard/Dashboard.dart';
 import 'package:agem/Screens/perfil.dart';
-import 'package:agem/Screens/cadastro_produto.dart';
+
 
 enum SampleItem { itemOne, itemTwo }
 

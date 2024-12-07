@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:agem/Colors_and_Fonts/colorsFont.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
- // Importando o AppColors e AppTextStyles
-// Se precisar usar o tema inteiro
+import 'package:agem/Colors_and_Fonts/colorsFont.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -13,6 +10,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   Future<void> _login() async {
     final email = _emailController.text.trim();
@@ -25,22 +23,40 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    try {
-      final response = await Supabase.instance.client.auth
-          .signInWithPassword(email: email, password: password);
+    setState(() {
+      _isLoading = true; // Ativando o indicador de carregamento
+    });
 
-      if (response.user != null) {
-        // Login bem-sucedido
-        Navigator.pushReplacementNamed(context, '/dashboard'); // Rota após login
+    try {
+      // Tentativa de login
+      final response = await Supabase.instance.client.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
+
+      // Verifica se o login foi bem-sucedido
+      if (response.session != null && response.user != null) {
+        Navigator.pushReplacementNamed(context, '/dashboard'); // Redireciona ao dashboard
+      } else {
+        // Login falhou explicitamente
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Credenciais inválidas. Tente novamente.')),
+        );
       }
     } on AuthException catch (e) {
+      // Captura erros específicos de autenticação
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro: ${e.message}')),
+        SnackBar(content: Text('Erro de autenticação: ${e.message}')),
       );
     } catch (e) {
+      // Captura erros inesperados
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro inesperado: $e')),
       );
+    } finally {
+      setState(() {
+        _isLoading = false; // Desativando o indicador de carregamento
+      });
     }
   }
 
@@ -78,8 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide.none,
                   ),
-                  prefixIcon:
-                      Icon(Icons.email, color: AppColors.brownMedium),
+                  prefixIcon: Icon(Icons.email, color: AppColors.brownMedium),
                 ),
               ),
               const SizedBox(height: 16),
@@ -98,8 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide.none,
                   ),
-                  prefixIcon:
-                      Icon(Icons.lock, color: AppColors.brownMedium),
+                  prefixIcon: Icon(Icons.lock, color: AppColors.brownMedium),
                 ),
               ),
               const SizedBox(height: 8),
@@ -117,16 +131,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
               // Botão de login
               ElevatedButton(
-                onPressed: _login,
-                child: Text(
-                  'Entrar',
-                  style: AppTextStyles.buttonBig
-                      .copyWith(color: AppColors.white),
-                ),
+                onPressed: _isLoading ? null : _login,
+                child: _isLoading
+                    ? CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(AppColors.white),
+                      )
+                    : Text(
+                        'Entrar',
+                        style: AppTextStyles.buttonBig
+                            .copyWith(color: AppColors.white),
+                      ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.greenMain,
-                  minimumSize:
-                      Size(double.infinity, 48), // Largura total do botão
+                  minimumSize: Size(double.infinity, 48),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -137,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
               // Criar conta
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/signup'); // Rota de criar conta
+                  Navigator.pushNamed(context, '/signup'); 
                 },
                 child: Text(
                   'Não tem uma conta? Criar conta',
